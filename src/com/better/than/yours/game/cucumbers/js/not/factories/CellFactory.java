@@ -1,11 +1,20 @@
 package com.better.than.yours.game.cucumbers.js.not.factories;
 
+import com.better.than.yours.game.cucumbers.js.not.models.BoardObserver;
 import com.better.than.yours.game.cucumbers.js.not.models.Cell;
 import com.better.than.yours.game.cucumbers.js.not.models.Position;
 
-public class CellFactory {
-    public static Cell makeCell(Position position, boolean isAlive){
+import java.util.Observer;
 
-        return new Cell(position, isAlive);
+public class CellFactory {
+
+    private BoardObserver observer;
+    public Cell makeCell(Position position, boolean isAlive){
+        Cell cell = new Cell(position, isAlive);
+        cell.setObserver(this.observer);
+        return cell;
+    }
+    public void passObserver(BoardObserver observer){
+        this.observer = observer;
     }
 }

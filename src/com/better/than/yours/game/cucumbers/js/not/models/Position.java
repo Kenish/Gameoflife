@@ -13,14 +13,17 @@ public class Position {
     }
 
     public int getX() {
+
         return x;
     }
 
     public int getY() {
+
         return y;
     }
 
     public boolean isValid(){
+
         return x >= 0 && x < board.width && y >= 0 && y < board.height;
     }
 }
