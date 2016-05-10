@@ -7,6 +7,7 @@ public interface Cells {
     boolean isAlive();
     int getLivingNeighbours();
     int[] getPosition();
+    Integer getId();
 
 
 }
