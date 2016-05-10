@@ -4,6 +4,7 @@ import com.better.than.yours.game.cucumbers.js.not.models.BoardObserver;
 import com.better.than.yours.game.cucumbers.js.not.models.Cell;
 import com.better.than.yours.game.cucumbers.js.not.models.Position;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,14 @@ public class Engine {
             int y = (int) (Math.random() * board.getHeight());
             Position position = new Position(x, y, board);
             board.createCell(position, true);
+        }
+        HashMap<Integer, Cell> clone = (HashMap) board.getCells().clone();
+        for(Map.Entry entry : clone.entrySet()){
+            Cell cell = (Cell) entry.getValue();
+            if (cell.isAlive()){
+                System.out.println("notify");
+                cell.notifyObserver(true);
+            }
         }
         gameThread();
     }
@@ -57,14 +66,24 @@ public class Engine {
         }
     }
     void gameThread(){
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < 100; i++){
             checkEach();
             observer.push();
-            System.out.println(getPopulation());
+            System.out.println("P: " + getAlivePopulation()); //??
+            System.out.println("Size: " + board.getCells().size()); //????
         }
     }
     int getPopulation(){
         return board.getCells().values().size();
     }
-
+    int getAlivePopulation(){
+        int alivePopulation = 0;
+        for (Map.Entry entry : board.getCells().entrySet()){
+            Cell cell = (Cell) entry.getValue();
+            if(cell.isAlive()){
+                alivePopulation += 1;
+            }
+        }
+        return alivePopulation;
+    }
 }

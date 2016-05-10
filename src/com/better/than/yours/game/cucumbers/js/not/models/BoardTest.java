@@ -1,11 +1,14 @@
 package com.better.than.yours.game.cucumbers.js.not.models;
 
+import com.better.than.yours.game.cucumbers.js.not.engine.Engine;
+import com.better.than.yours.game.cucumbers.js.not.engine.Rules;
 import com.better.than.yours.game.cucumbers.js.not.exceptions.WrongPositionException;
 import com.better.than.yours.game.cucumbers.js.not.factories.CellFactory;
 import org.junit.Test;
 
 import java.util.HashMap;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.*;
 
 /**
@@ -13,8 +16,9 @@ import static org.junit.Assert.*;
  */
 public class BoardTest {
     Board board = new Board(10, 15);
-    CellFactory cellFactory = new CellFactory();
     BoardObserver observer = new BoardObserver(board);
+    CellFactory cellFactory = new CellFactory();
+
     @Test
     public void getWidth() throws Exception {
         assertEquals(10, board.getWidth());
@@ -29,30 +33,30 @@ public class BoardTest {
     public void addCell() throws Exception {
         cellFactory.passObserver(observer);
         Position position = new Position(2,1, board);
-        Cell cell = cellFactory.makeCell(position, true);
+        Cell cell = cellFactory.makeCell(position);
         board.addCell(5, cell);
         assertEquals(1, board.getCells().size());
     }
 
     @Test
     public void createCellTest() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position = new Position(2,1, board);
         Cell cell = board.createCell(position, true);
         assertEquals(1, board.getCells().size());
     }
     @Test
     public void createCellTestTheSamePosition() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(2,1, board);
         Position position2 = new Position(2,1, board);
         Cell cell1 = board.createCell(position1, true);
         Cell cell2 = board.createCell(position2, true);
-        assertEquals(1, board.getCells().size());
+        assertEquals(9, board.getCells().size());
     }
     @Test (expected = WrongPositionException.class)
     public void createCellBadCoordinates() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(2,1, board);
         Position position2 = new Position(2,-1, board);
         Cell cell1 = board.createCell(position1, true);
@@ -61,36 +65,53 @@ public class BoardTest {
 
     @Test
     public void getCells() throws Exception {
-        cellFactory.passObserver(observer);
-        Position position1 = new Position(2,1, board);
-        Position position2 = new Position(9,6, board);
+        board.passObserver(observer);
+        Position position1 = new Position(3,4, board);
+        Position position2 = new Position(8,6, board);
         Cell cell1 = board.createCell(position1, true);
         Cell cell2 = board.createCell(position2, true);
-        assertEquals(2, board.getCells().size());
+        assertEquals(18, board.getCells().size());
     }
     @Test
     public void getCellsWithRemoval() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(2,1, board);
         Position position2 = new Position(9,6, board);
         Cell cell1 = board.createCell(position1, true);
         Cell cell2 = board.createCell(position2, true);
         board.removeCell(cell1.getId());
-        assertEquals(1, board.getCells().size());
+        assertEquals(9, board.getCells().size());
     }
-
     @Test
     public void setCellId() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(2,1, board);
-        Cell cell1 = cellFactory.makeCell(position1, true);
+        Cell cell1 = cellFactory.makeCell(position1);
         board.setCellId(cell1, 17);
         assertEquals(17, cell1.getId());
     }
-
+    @Test
+    public void getLivingNeighbours() {
+        board.passObserver(observer);
+        Position position1 = new Position(2,1, board);
+        Position position2 = new Position(2,2, board);
+        Cell cell1 = board.createCell(position1, true);
+        Cell cell2 = board.createCell(position2, true);
+        assertEquals(1, cell1.getLivingNeighbours());
+    }
+    @Test
+    public void getLivingNeighboursAfterRemoval() {
+        board.passObserver(observer);
+        Position position1 = new Position(2,1, board);
+        Position position2 = new Position(2,2, board);
+        Cell cell1 = board.createCell(position1, true);
+        Cell cell2 = board.createCell(position2, true);
+        board.removeCell(cell1.getId());
+        assertEquals(1, cell2.getLivingNeighbours());
+    }
     @Test
     public void getCell() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(2,1, board);
         Position position2 = new Position(9,6, board);
         Cell cell1 = board.createCell(position1, true);
@@ -100,7 +121,7 @@ public class BoardTest {
 
     @Test
     public void removeCell() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(2,1, board);
         Position position2 = new Position(9,6, board);
         Cell cell1 = board.createCell(position1, true);
@@ -110,23 +131,35 @@ public class BoardTest {
 
     @Test
     public void generateCellIdTest() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(9,6, board);
         int id = board.generateCellId(position1);
         assertEquals(6*10 + 9, id);
     }
-
+    @Test
+    public void isAlive()  {
+        board.passObserver(observer);
+        Position position = new Position(2,1, board);
+        Cell cell = board.createCell(position, true);
+        assertTrue(cell.isAlive());
+    }
+    @Test
+    public void isNotAlive() {
+        Position position = new Position(2,1, board);
+        Cell cell = board.createCell(position, false);
+        assertFalse(cell.isAlive());
+    }
     @Test
     public void setCellId1Test() throws Exception {
         Position position2 = new Position(9,6, board);
-        Cell cell1 = cellFactory.makeCell(position2, true);
+        Cell cell1 = cellFactory.makeCell(position2);
         board.setCellId(cell1, 6*10 + 9);
         assertEquals(6 * 10 + 9, cell1.getId());
     }
 
     @Test
     public void getCellPosition() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(2,1, board);
         Cell cell1 = board.createCell(position1, true);
         assertEquals(cell1.position, position1);
@@ -134,7 +167,7 @@ public class BoardTest {
 
     @Test
     public void getNextNeighborRightDown() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(3,4, board);
         Position position2 = new Position(4,5, board);
         Cell cell1 = board.createCell(position1, true);
@@ -144,7 +177,7 @@ public class BoardTest {
     }
     @Test
     public void getNextNeighborLeftUp() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(3,4, board);
         Position position2 = new Position(2,3, board);
         Cell cell1 = board.createCell(position1, true);
@@ -154,7 +187,7 @@ public class BoardTest {
     }
     @Test
     public void getNextNeighborNotNeighbor() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position1 = new Position(3,4, board);
         Position position2 = new Position(3,3, board);
         Cell cell1 = board.createCell(position1, true);

@@ -33,11 +33,9 @@ public class BoardObserver {
     public void push(){
         for (Map.Entry<Integer, Integer> entry : toCallMap.entrySet()){
             int id = entry.getKey();
-            System.out.println("id: " + id);
             Cell cell = board.getCell(id);
             if (cell != null){
                 int currentNeighbors = cell.getLivingNeighbours();
-                System.out.println("C: " + currentNeighbors);
                 cell.updateNumberOfNeighbors(currentNeighbors + entry.getValue());
             }
         }

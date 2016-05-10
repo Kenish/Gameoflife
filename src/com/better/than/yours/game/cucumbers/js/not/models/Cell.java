@@ -8,14 +8,14 @@ import com.better.than.yours.game.cucumbers.js.not.exceptions.WrongPositionExcep
  * Refactor by Mati on 2016-05-10.
  */
 public class Cell implements Cells {
-    boolean livingStatus;
+    private boolean livingStatus;
     public final Position position;
     private BoardObserver observer;
     private int id;
     private int neighbors;
-    public Cell(Position position, boolean livingStatus){
+    public Cell(Position position){
 
-        this.livingStatus = livingStatus;
+        this.livingStatus = false;
 
         if (!position.isValid()){
 
@@ -33,8 +33,10 @@ public class Cell implements Cells {
         return this.id;
     };
     public void setObserver(BoardObserver observer){
-
         this.observer = observer;
+    }
+    public BoardObserver getObserver(){
+        return this.observer;
     }
     public void notifyObserver(boolean isReviveEvent){
 
@@ -48,12 +50,11 @@ public class Cell implements Cells {
     public void kill(){
 
         livingStatus = false;
-        observer.update(position, false);
+        notifyObserver(false);
     }
     public void revive(){
-
         livingStatus = true;
-        observer.update(position, true);
+        notifyObserver(true);
     }
     @Override
     public int getLivingNeighbours() {

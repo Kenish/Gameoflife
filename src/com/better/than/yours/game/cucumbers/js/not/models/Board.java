@@ -40,14 +40,17 @@ public class Board {
         this.cellsHashMap = cellsHashMap;
     }
 
-    public void addCell(Integer id, Cell cell){
+    public void addCell(Integer id, Cell cell) {
         cellsHashMap.put(id, cell);
     }
 
     public Cell createCell(Position position, boolean isAlive){
-        Cell cell = cellFactory.makeCell(position, isAlive);
+        Cell cell = cellFactory.makeCell(position);
         int id = setCellId(cell);
         addCell(id, cell);
+        if(isAlive){
+            cell.revive();
+        }
         return cell;
     }
 

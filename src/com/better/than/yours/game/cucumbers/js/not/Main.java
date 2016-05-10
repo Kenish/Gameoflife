@@ -10,6 +10,6 @@ public class Main {
         Rules rules = new Rules(1, 4, 3);
         Board board = new Board(10, 10);
         Engine engine = new Engine(board, rules);
-        engine.startGame(1);
+        engine.startGame(40);
     }
 }

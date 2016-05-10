@@ -9,12 +9,13 @@ import java.util.Observer;
 public class CellFactory {
 
     private BoardObserver observer;
-    public Cell makeCell(Position position, boolean isAlive){
-        Cell cell = new Cell(position, isAlive);
+    public Cell makeCell(Position position){
+        Cell cell = new Cell(position);
         cell.setObserver(this.observer);
         return cell;
     }
     public void passObserver(BoardObserver observer){
+
         this.observer = observer;
     }
 }
