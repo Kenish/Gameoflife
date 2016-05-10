@@ -5,6 +5,7 @@ package com.better.than.yours.game.cucumbers.js.not;
  */
 public class Cell implements Cells{
     boolean livingStatus;
+    BoardObserver observer;
     int[] poistion = new int[2];
     Cell(boolean livingStatus,int[] position){
         this.livingStatus=livingStatus;
@@ -12,7 +13,8 @@ public class Cell implements Cells{
             throw new WrongPositionException("X and Y coordinates should be positive");
         }
         this.poistion=position;
-
+        int id = position[0]*position[1];
+        observer.getinformed(id,this);
 
 
     }
@@ -22,7 +24,7 @@ public class Cell implements Cells{
     }
 
     @Override
-    public int[] getPostion() {
+    public int[] getPosition() {
         return poistion;
     }
 

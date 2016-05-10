@@ -26,14 +26,14 @@ public class CellTest {
         CellFactory factory = new CellFactory();
         int[] position = {1,2};
         Cell cell=factory.makeCell(false,position);
-        assertEquals(position,cell.getPostion());
+        assertEquals(position,cell.getPosition());
     }
     @org.junit.Test(expected = WrongPositionException.class)
     public void getWrongPosition()  {
         CellFactory factory = new CellFactory();
         int[] position = {1,-2};
         Cell cell=factory.makeCell(false,position);
-        assertEquals(position,cell.getPostion());
+        assertEquals(position,cell.getPosition());
     }
     @org.junit.Test
     public void getLivingNeighbours() {
