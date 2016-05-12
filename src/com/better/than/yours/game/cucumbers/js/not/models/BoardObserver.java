@@ -11,22 +11,21 @@ import java.util.Map;
  */
 public class BoardObserver {
     HashMap<Integer,Integer> toCallMap = new HashMap<>();
+    HashMap<Integer,Boolean> changeStatusMap = new HashMap<>();
     Board board;
     public BoardObserver(Board board){
         this.board = board;
     }
-    public void update(Position position, boolean reviveEvent){
+    public void update(Integer id, boolean reviveEvent){
+        Position position = board.getCellPosition(id);
         int difference = (reviveEvent) ? 1 : -1;
-        int testCounter = 0;
+        changeStatusMap.put(id, reviveEvent);
         for (int i = 0; i < 8; i++){
             Cell cell =  board.getNextNeighbor(position, i);
             if (cell != null){
-                Integer id = cell.getId();
-                int currentValue = 0;
-                if (toCallMap.containsKey(id)){
-                    currentValue = toCallMap.get(id);
-                }
-                toCallMap.put(id, currentValue + difference);
+                Integer neighId = cell.getId();
+                int val = (toCallMap.containsKey(neighId)) ? toCallMap.get(neighId) + difference : difference;
+                toCallMap.put(neighId, val);
             }
         }
     }
@@ -39,6 +38,16 @@ public class BoardObserver {
                 cell.updateNumberOfNeighbors(currentNeighbors + entry.getValue());
             }
         }
+        for (Map.Entry<Integer, Boolean> entry : changeStatusMap.entrySet()){
+            int id = entry.getKey();
+            boolean value = entry.getValue();
+            board.getCell(id).setLivingStatus(value);
+        }
+        toCallMap.clear();
+        changeStatusMap.clear();
+    }
+    void deleteCell(int id){
+        board.removeCell(id);
     }
 
 }

@@ -16,10 +16,13 @@ public class Engine {
     Board board;
     BoardObserver observer;
     Rules rules;
+    Thread gameThread;
     public Engine(Board board, Rules rules){
         this.board = board;
         this.rules = rules;
         this.observer = new BoardObserver(board);
+        this.gameThread = new Thread(new GameThread(this), this.toString());
+        System.out.println(this.toString());
         board.passObserver(observer);
     }
     public void startGame(int startPopulation){
@@ -29,24 +32,36 @@ public class Engine {
             Position position = new Position(x, y, board);
             board.createCell(position, true);
         }
-        HashMap<Integer, Cell> clone = (HashMap) board.getCells().clone();
-        for(Map.Entry entry : clone.entrySet()){
-            Cell cell = (Cell) entry.getValue();
-            if (cell.isAlive()){
-                System.out.println("notify");
-                cell.notifyObserver(true);
-            }
-        }
-        gameThread();
+        observer.push();
+        gameThread.start();
+
     }
+    public void startGame(Position[] positions){
+        for (int i = 0; i < positions.length; i++){
+            board.createCell(positions[i], true);
+        }
+        observer.push();
+        gameThread.start();
+    }
+    public void endGame() {
+        System.out.println("call");
+        gameThread.interrupt();
+    }
+    public void continueGame(){
+        gameThread.start();
+    }
+
     void checkEach(){
         HashMap<Integer, Cell> cellsInBoard = (HashMap) board.getCells().clone();
         for (Map.Entry<Integer, Cell> entry : cellsInBoard.entrySet()){
             Cell cell = entry.getValue();
             int neighbors = cell.getLivingNeighbours();
             if (cell.isAlive()){
+                //System.out.println("Coords: x: " + cell.position.getX() + " y: " + cell.position.getY());
                 aliveOracle(cell, neighbors);
             } else {
+                if (board.generateCellId(new Position(22, 24, board)) == cell.getId()){
+                }
                 deadOracle(cell, neighbors);
             }
         }
@@ -61,16 +76,6 @@ public class Engine {
     void deadOracle(Cell cell, int neighbors){
         if (neighbors == rules.bornTime){
             cell.revive();
-        } else if (neighbors < 1){
-            board.removeCell(cell.getId());
-        }
-    }
-    void gameThread(){
-        for(int i = 0; i < 100; i++){
-            checkEach();
-            observer.push();
-            System.out.println("P: " + getAlivePopulation()); //??
-            System.out.println("Size: " + board.getCells().size()); //????
         }
     }
     int getPopulation(){

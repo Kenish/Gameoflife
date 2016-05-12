@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         Rules rules = new Rules(1, 4, 3);
-        Board board = new Board(10, 10);
+        Board board = new Board(2, 2);
         Engine engine = new Engine(board, rules);
         engine.startGame(40);
     }

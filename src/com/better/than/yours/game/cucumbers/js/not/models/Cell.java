@@ -19,7 +19,7 @@ public class Cell implements Cells {
 
         if (!position.isValid()){
 
-            throw new WrongPositionException("X and Y coordinates should be positive");
+            throw new WrongPositionException("X or Y coordinate is outside the map");
         }
 
         this.position = position;
@@ -39,21 +39,23 @@ public class Cell implements Cells {
         return this.observer;
     }
     public void notifyObserver(boolean isReviveEvent){
-
-        this.observer.update(position, isReviveEvent);
+        this.observer.update(id, isReviveEvent);
     }
     @Override
     public boolean isAlive() {
 
         return livingStatus;
     }
+    public void setLivingStatus(boolean livingStatus){
+        this.livingStatus = livingStatus;
+    }
     public void kill(){
 
-        livingStatus = false;
+        //this.livingStatus = false;
         notifyObserver(false);
     }
     public void revive(){
-        livingStatus = true;
+        //this.livingStatus = true;
         notifyObserver(true);
     }
     @Override
@@ -62,9 +64,22 @@ public class Cell implements Cells {
         return neighbors;
     }
 
-    public void updateNumberOfNeighbors(int neighbors){
-
+    public void setNumberOfNeighbors(int neighbors){
         this.neighbors = neighbors;
+    }
+    public void updateNumberOfNeighbors(int neighbors){
+        this.neighbors = neighbors;
+        oracle();
+    }
+    void oracle(){
+        //System.out.println("Cell id: " + id + "Cell neights: " + neighbors);
+        if (this.neighbors < 1){
+            //System.out.println("Deleting: " + id);
+            if (isAlive()){
+                notifyObserver(false);
+            }
+            observer.deleteCell(id);
+        }
     }
 
 }

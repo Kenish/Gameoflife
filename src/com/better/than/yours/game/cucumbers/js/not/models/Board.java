@@ -40,20 +40,25 @@ public class Board {
         this.cellsHashMap = cellsHashMap;
     }
 
-    public void addCell(Integer id, Cell cell) {
+    public void addCell(Integer id, Cell cell, boolean isAlive) {
         cellsHashMap.put(id, cell);
-    }
-
-    public Cell createCell(Position position, boolean isAlive){
-        Cell cell = cellFactory.makeCell(position);
-        int id = setCellId(cell);
-        addCell(id, cell);
         if(isAlive){
             cell.revive();
         }
+    }
+    public Cell createCell(Position position, boolean isAlive){
+        Cell cell = cellFactory.makeCell(position);
+        int id = setCellId(cell);
+        if (cellsHashMap.containsKey(id)){
+            cell = cellsHashMap.get(id);
+            if (isAlive && !cell.isAlive()){
+                cell.revive();
+            }
+        } else{
+            addCell(id, cell, isAlive);
+        }
         return cell;
     }
-
     int setCellId(Cell cell){
         int id = getWidth() * cell.position.getY() + cell.position.getX();
         cell.setId(id);
@@ -63,9 +68,11 @@ public class Board {
     public void removeCell(Integer id){
         cellsHashMap.remove(id);
     }
-    int generateCellId(Position position){
+
+    public int generateCellId(Position position){
         return getWidth() * position.getY() + position.getX();
     }
+
     void setCellId(Cell cell, int id){
         cell.setId(id);
     }
@@ -87,6 +94,7 @@ public class Board {
             Cell cell = getCell(id);
             if (cell == null){
                 cell = createCell(newPosition, false);
+                //cell.updateNumberOfNeighbors(1);
             }
             return cell;
         }

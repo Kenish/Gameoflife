@@ -31,11 +31,28 @@ public class BoardTest {
 
     @Test
     public void addCell() throws Exception {
-        cellFactory.passObserver(observer);
+        board.passObserver(observer);
         Position position = new Position(2,1, board);
-        Cell cell = cellFactory.makeCell(position);
-        board.addCell(5, cell);
-        assertEquals(1, board.getCells().size());
+        Cell cell = board.createCell(position, true);
+        assertEquals(9, board.getCells().size());
+    }
+    @Test
+    public void addTwoCellsNear() throws Exception {
+        board.passObserver(observer);
+        Position position = new Position(2,1, board);
+        Position position2 = new Position(2,2, board);
+        Cell cell2 = board.createCell(position2, true);
+        Cell cell = board.createCell(position, true);
+        assertEquals(12, board.getCells().size());
+    }
+    @Test
+    public void addTwoCellsFar() throws Exception {
+        board.passObserver(observer);
+        Position position = new Position(2,1, board);
+        Position position2 = new Position(5,7, board);
+        Cell cell2 = board.createCell(position2, true);
+        Cell cell = board.createCell(position, true);
+        assertEquals(18, board.getCells().size());
     }
 
     @Test
@@ -43,7 +60,7 @@ public class BoardTest {
         board.passObserver(observer);
         Position position = new Position(2,1, board);
         Cell cell = board.createCell(position, true);
-        assertEquals(1, board.getCells().size());
+        assertEquals(9, board.getCells().size());
     }
     @Test
     public void createCellTestTheSamePosition() throws Exception {
@@ -76,9 +93,10 @@ public class BoardTest {
     public void getCellsWithRemoval() throws Exception {
         board.passObserver(observer);
         Position position1 = new Position(2,1, board);
-        Position position2 = new Position(9,6, board);
+        Position position2 = new Position(8,6, board);
         Cell cell1 = board.createCell(position1, true);
         Cell cell2 = board.createCell(position2, true);
+        cell1.kill();
         board.removeCell(cell1.getId());
         assertEquals(9, board.getCells().size());
     }
@@ -97,17 +115,34 @@ public class BoardTest {
         Position position2 = new Position(2,2, board);
         Cell cell1 = board.createCell(position1, true);
         Cell cell2 = board.createCell(position2, true);
+        observer.push();
         assertEquals(1, cell1.getLivingNeighbours());
+        assertEquals(1, cell2.getLivingNeighbours());
     }
     @Test
     public void getLivingNeighboursAfterRemoval() {
         board.passObserver(observer);
         Position position1 = new Position(2,1, board);
         Position position2 = new Position(2,2, board);
+        Position position3 = new Position(3,1, board);
+        Position position4 = new Position(3,2, board);
+        Position position5 = new Position(2,4, board);
+
+
         Cell cell1 = board.createCell(position1, true);
         Cell cell2 = board.createCell(position2, true);
-        board.removeCell(cell1.getId());
-        assertEquals(1, cell2.getLivingNeighbours());
+        Cell cell3 = board.createCell(position3, true);
+        Cell cell4 = board.createCell(position4, true);
+        Cell cell5 = board.createCell(position5, true);
+
+        observer.push();
+        assertEquals(3, cell2.getLivingNeighbours());
+        cell5.kill();
+        observer.push();
+        System.out.println(cell1.isAlive());
+        System.out.println(cell2.isAlive());
+        assertEquals(3, cell2.getLivingNeighbours());
+        assertEquals(3, cell4.getLivingNeighbours());
     }
     @Test
     public void getCell() throws Exception {
@@ -119,13 +154,26 @@ public class BoardTest {
         assertEquals(cell1, board.getCell(cell1.getId()));
     }
 
-    @Test
+    @Test //it should be in engine tests.
     public void removeCell() throws Exception {
         board.passObserver(observer);
         Position position1 = new Position(2,1, board);
-        Position position2 = new Position(9,6, board);
         Cell cell1 = board.createCell(position1, true);
-        board.removeCell(cell1.getId());
+        cell1.kill();
+        cell1.oracle();
+        observer.push();
+        assertEquals(0, board.getCells().size());
+    }
+    @Test
+    public void lonelyDeath() throws Exception {
+        board.passObserver(observer);
+        Position position1 = new Position(3,2, board);
+        Position position2 = new Position(2,2, board);
+        Cell cell1 = board.createCell(position1, true);
+        Cell cell2 = board.createCell(position2, true);
+        observer.push();
+        cell1.kill();
+        observer.push();
         assertEquals(0, board.getCells().size());
     }
 
