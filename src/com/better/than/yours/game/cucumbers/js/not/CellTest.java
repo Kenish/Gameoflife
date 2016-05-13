@@ -9,15 +9,17 @@ public class CellTest {
     @org.junit.Test
     public void isAlive()  {
         CellFactory factory = new CellFactory();
+        Board board = new Board(10,10);
         int[] position = {1,2};
-        Cell cell=factory.makeCell(true,position);
+        Cell cell=factory.makeCell(true,position,board);
         assertTrue(cell.isAlive());
     }
     @org.junit.Test
     public void isNotAlive() {
         CellFactory factory = new CellFactory();
         int[] position = {1,2};
-        Cell cell=factory.makeCell(false,position);
+        Board board = new Board(10,10);
+        Cell cell=factory.makeCell(false,position,board);
         assertFalse(cell.isAlive());
     }
 
@@ -25,21 +27,24 @@ public class CellTest {
     public void getPosition()  {
         CellFactory factory = new CellFactory();
         int[] position = {1,2};
-        Cell cell=factory.makeCell(false,position);
+        Board board = new Board(10,10);
+        Cell cell=factory.makeCell(false,position,board);
         assertEquals(position,cell.getPosition());
     }
     @org.junit.Test(expected = WrongPositionException.class)
     public void getWrongPosition()  {
         CellFactory factory = new CellFactory();
         int[] position = {1,-2};
-        Cell cell=factory.makeCell(false,position);
+        Board board = new Board(10,10);
+        Cell cell=factory.makeCell(false,position,board);
         assertEquals(position,cell.getPosition());
     }
     @org.junit.Test
     public void getLivingNeighbours() {
         CellFactory factory = new CellFactory();
         int[] position = {1,2};
-        Cell cell=factory.makeCell(false,position);
+        Board board = new Board(10,10);
+        Cell cell=factory.makeCell(false,position,board);
         //dodaj sasiada TODO:zrobic to
         assertEquals(cell.getLivingNeighbours(),1);
     }
@@ -47,7 +52,8 @@ public class CellTest {
     public void getLivingNeighboursAfterRemoval() {
         CellFactory factory = new CellFactory();
         int[] position = {1,2};
-        Cell cell=factory.makeCell(false,position);
+        Board board = new Board(10,10);
+        Cell cell=factory.makeCell(false,position,board);
         //dodaj sasiada TODO:zrobic to
         //usuń sasiada
         //dodaj sasiada

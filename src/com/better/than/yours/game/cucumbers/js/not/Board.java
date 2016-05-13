@@ -10,4 +10,5 @@ public class Board {
         this.width=width;
         this.height=height;
     }
+
 }
