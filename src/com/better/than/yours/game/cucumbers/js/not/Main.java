@@ -30,16 +30,8 @@ public class Main {
                 }
 
             }
-            for (int i = 0; (i < board.height * board.width); i++) {
-                if (map.containsKey(i)) {
-                    engine.cellDecider((Cell) map.get(i), board, factory);
-                }
-            }
-         engine.nextTurn();
+            engine.nextTurn();
             System.out.println("new turn");
-    /*    map.forEach((k,v) -> System.out.println((Cell)v +" "+ k));*/
-       /* map.forEach((k,v) -> System.out.print(engine.lookForCells((Cell)map.get(v),board,factory)));*/
-
         }
 
     }

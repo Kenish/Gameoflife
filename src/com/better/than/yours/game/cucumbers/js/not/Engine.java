@@ -61,7 +61,7 @@ public class Engine {
         if (lookForCells(cell,board,factory)==3 && !cell.livingStatus){
          toRevive.add(cell);
         }
-        else if (lookForCells(cell,board,factory)<2 || lookForCells(cell,board,factory)>3 && cell.livingStatus ){
+        else if (lookForCells(cell,board,factory)<2 && cell.livingStatus || lookForCells(cell,board,factory)>3 && cell.livingStatus ){
             toKill.add(cell);
         }
     }
