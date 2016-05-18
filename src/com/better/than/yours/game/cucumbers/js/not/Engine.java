@@ -32,24 +32,17 @@ public class Engine {
         return mapCells;
     }
 
-    public Integer lookForCells(Cell cell,Board board,CellFactory factory) {
+    public Integer lookForCells(Cell cell,Board board) {
         cell.zeroNeighbours();
-        Integer posX = mapCells.get(cell.getId()).getPositionX();
-        Integer posY = mapCells.get(cell.getId()).getPositionY();
+        Integer posX = cell.getPositionX();
+        Integer posY = cell.getPositionY();
 
         for (int j=-1; j<2;j++) {
             for (int i = -1; i < 2; i++) {
                 if (!(i==0&&j==0)){
                     Integer Checkposition = generateId(board, posX + j, posY + i);
-                    /*System.out.println(Checkposition +" ");*/
                     if(mapCells.containsKey(Checkposition)&&mapCells.get(Checkposition).isAlive()){
                         cell.addNeigbour();
-                    }
-                    else{
-                        if(posX+j>0&&posY+i>0&&posX<board.width+j&&posY+i<board.height&&cell.livingStatus) {
-                            int position[] = {posX + j, posY + i};
-                            cellputter(factory.makeCell(false, position, board),mapCells,board);
-                        }
                     }
                 }
             }
@@ -57,17 +50,35 @@ public class Engine {
         return cell.neigbours;
     }
 
+    void makeSomeDeadCells (Cell cell,Board board,CellFactory factory){
+        Integer posX = cell.getPositionX();
+        Integer posY = cell.getPositionY();
+        for (int j=-1; j<2;j++) {
+            for (int i = -1; i < 2; i++) {
+                if (!(i == 0 && j == 0)) {
+                    Integer Checkposition = generateId(board, posX + j, posY + i);
+                    if (posX + j > 0 && posY + i > 0 && posX + j < board.width && posY + i < board.height && cell.isAlive()&& !mapCells.containsKey(Checkposition)) {
+                        int position[] = {posX + j, posY + i};
+                        cellputter(factory.makeCell(false, position, board), mapCells, board);
+                    }
+
+                }
+            }
+        }
+    }
     void cellDecider(Cell cell,Board board,CellFactory factory){
-        if (lookForCells(cell,board,factory)==3 && !cell.livingStatus){
+        if (lookForCells(cell,board)==3 && !cell.isAlive()){
          toRevive.add(cell);
         }
-        else if (lookForCells(cell,board,factory)<2 && cell.livingStatus || lookForCells(cell,board,factory)>3 && cell.livingStatus ){
+        else if (lookForCells(cell,board)<2 && cell.isAlive() || lookForCells(cell,board)>3 && cell.isAlive() ){
             toKill.add(cell);
         }
     }
     void nextTurn(){
         toRevive.forEach(Cell::revive) ;
+        toRevive.clear();
         toKill.forEach(Cell::kill);
+        toKill.clear();
     }
 
     public Integer generateId(Board board,Integer posX,Integer posY){
@@ -75,6 +86,7 @@ public class Engine {
         return posX+(posY*board.width);
     }
     void cellputter(Cell cell, HashMap<Integer, Cell> mapCells,Board board){
+        cell.addNeigbour();
         mapCells.put(generateId(board,cell.getPositionX(),cell.getPositionY()),cell);
        /* System.out.println("I've put cell");*/
     }

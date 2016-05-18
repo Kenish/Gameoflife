@@ -9,18 +9,29 @@ public class Main {
         Engine engine = new Engine(board,0);
         CellFactory factory= new CellFactory();
         HashMap map = engine.getMap();
-        int[] a = {22,21};
-        int[] b = {22,23};
-        int[] c = {23,22};
-        int[] d = {23,23};
-        int[] e = {21,23};
-        map.put(engine.generateId(board,22,21),factory.makeCell(true,a,board));
-        map.put(engine.generateId(board,22,23),factory.makeCell(true,b,board));
-        map.put(engine.generateId(board,23,22),factory.makeCell(true,c,board));
-        map.put(engine.generateId(board,23,23),factory.makeCell(true,d,board));
-        map.put(engine.generateId(board,21,23),factory.makeCell(true,e,board));
+        int a[] = {30,5};
+        int b[] = {30,7 };
+        int c[] = {29,7 };
+        int d[] = {32,6 };
+        int e[] = {33,7 };
+        int f[] = {34,7 };
+        int g[] = {35,7 };
+        map.put(engine.generateId(board,30,5),factory.makeCell(true,a,board));
+        map.put(engine.generateId(board,30,7),factory.makeCell(true,b,board));
+        map.put(engine.generateId(board,29,7),factory.makeCell(true,c,board));
+        map.put(engine.generateId(board,32,6),factory.makeCell(true,d,board));
+        map.put(engine.generateId(board,33,7),factory.makeCell(true,e,board));
+        map.put(engine.generateId(board,34,7),factory.makeCell(true,f,board));
+        map.put(engine.generateId(board,35,7),factory.makeCell(true,g,board));
+        for (int j=0;j<60;j++) {
+            for (int k=0; k<board.height*board.width;k++){
+                if (map.containsKey(k)){
+                    engine.lookForCells((Cell)map.get(k),board);
+                    engine.makeSomeDeadCells((Cell)map.get(k),board,factory);
 
-        for (int j=0;j<25;j++) {
+                }
+            }
+
             for (int i = 0; (i < board.height * board.width); i++) {
                 if (map.containsKey(i)) {
                     if(((Cell) map.get(i)).isAlive()){
@@ -32,6 +43,7 @@ public class Main {
             }
             engine.nextTurn();
             System.out.println("new turn");
+            System.out.println("population" + map.size());
         }
 
     }
