@@ -19,7 +19,7 @@ public class Display extends Application {
     private GraphicsContext gc;
     private int mapSize;
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("The Game of Life");
         root = new Group();
@@ -37,6 +37,7 @@ public class Display extends Application {
         System.out.println(mapSize + " " + populationPercentage);
         Canvas canvas = new Canvas(mapSize * 10, mapSize * 10);
         this.gc = canvas.getGraphicsContext2D();
+        System.out.print(gc);
         root.getChildren().add(canvas);
         Scene scene = new Scene(root, mapSize * 10, mapSize * 10);
         primaryStage.setScene(scene);
@@ -46,6 +47,9 @@ public class Display extends Application {
     public void draw(int x, int y) {
         gc.setFill(Color.BLACK);
         gc.fillRect(x * 10, y * 10, 10, 10);
+    }
+    public Object Getgc(){
+        return this.gc;
     }
     public void clear() {
         gc.clearRect(0, 0, mapSize * 10, mapSize * 10);
