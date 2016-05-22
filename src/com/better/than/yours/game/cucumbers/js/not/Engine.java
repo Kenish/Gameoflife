@@ -3,17 +3,12 @@ package com.better.than.yours.game.cucumbers.js.not;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-
-
-/**
- * Created by Pszemek on 2016-05-10.
- */
-public class Engine {
-    ArrayList<Cell> toRevive = new ArrayList();
-    ArrayList<Cell> toKill = new ArrayList<>();
-    Board board;
-    HashMap<Integer,Cell> mapCells= new HashMap<>();
-    public Engine(Board board, int population) {
+class Engine {
+   private ArrayList<Cell> toRevive = new ArrayList<>();
+    private ArrayList<Cell> toKill = new ArrayList<>();
+    private Board board;
+    private HashMap<Integer,Cell> mapCells= new HashMap<>();
+    Engine(Board board, int population) {
         Random rnd = new Random();
         for (int i = 0; i < population; i++) {
             Position position = new Position(rnd.nextInt(board.width), rnd.nextInt(board.height));
@@ -23,7 +18,7 @@ public class Engine {
         this.board=board;
     }
 
-    public Integer lookForCells(Cell cell,Board board) {
+    private Integer lookForCells(Cell cell,Board board) {
         cell.zeroNeighbours();
         Integer posX = cell.position.getX();
         Integer posY = cell.position.getY();
@@ -41,7 +36,7 @@ public class Engine {
         return cell.getLivingNeighbours();
     }
 
-    void makeSomeDeadCells (Cell cell,Board board){
+    private void makeSomeDeadCells(Cell cell, Board board){
         Integer posX = cell.position.getX();
         Integer posY = cell.position.getY();
         for (int j=-1; j<2;j++) {
@@ -58,7 +53,7 @@ public class Engine {
         }
     }
 
-    void cellDecider(Cell cell){
+    private void cellDecider(Cell cell){
         if (cell.getLivingNeighbours()==3 && !cell.isAlive()){
             toRevive.add(cell);
         }
@@ -67,13 +62,13 @@ public class Engine {
         }
     }
 
-    void nextTurn(){
+    private void nextTurn(){
         toRevive.forEach(Cell::revive) ;
         toRevive.clear();
         toKill.forEach(Cell::kill);
         toKill.clear();
     }
-    public static Integer generateId(Board board,Integer posX,Integer posY){
+    private static Integer generateId(Board board, Integer posX, Integer posY){
 
         return posX+(posY*board.width);
     }
@@ -81,10 +76,7 @@ public class Engine {
     void cellputter(Cell cell){
         mapCells.put(generateId(board,cell.position.getX(),cell.position.getY()),cell);
     }
-    public HashMap getMap() {
 
-        return mapCells;
-    }
     void playGame(){
 
         for (int i=0; i<board.width*board.height;i++) {

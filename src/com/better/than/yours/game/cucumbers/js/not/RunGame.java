@@ -1,18 +1,13 @@
 package com.better.than.yours.game.cucumbers.js.not;
 
-/**
- * Created by Pszemek on 2016-05-22.
- */
-public class RunGame implements Runnable{
-
-    static Boolean a=true;
-    int i = 0;
+class RunGame implements Runnable{
+    private static Boolean a=true;
     @Override
     public void run() {
 
         Board board = new Board(100,100);
-        Engine engine = new Engine(board,3000);
-        /*engine.cellputter(CellFactory.makeCell(true,new Position(1,5), board));
+        Engine engine = new Engine(board,0);
+        engine.cellputter(CellFactory.makeCell(true,new Position(1,5), board));
         engine.cellputter(CellFactory.makeCell(true,new Position(1,6) ,board));
         engine.cellputter(CellFactory.makeCell(true,new Position(2,5) ,board));
         engine.cellputter(CellFactory.makeCell(true,new Position(2,6) ,board));
@@ -60,7 +55,7 @@ public class RunGame implements Runnable{
         engine.cellputter(CellFactory.makeCell(true,new Position(35,3) ,board));
         engine.cellputter(CellFactory.makeCell(true,new Position(35,4) ,board));
         engine.cellputter(CellFactory.makeCell(true,new Position(36,3) ,board));
-        engine.cellputter(CellFactory.makeCell(true,new Position(36,4) ,board));*/
+        engine.cellputter(CellFactory.makeCell(true,new Position(36,4) ,board));
         while (a){
             Display.clear();
             engine.playGame();
@@ -74,7 +69,7 @@ public class RunGame implements Runnable{
         }
     }
 
-    public static void shutdown() {
+    static void shutdown() {
         a = false;
 
     }

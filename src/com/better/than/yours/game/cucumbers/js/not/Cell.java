@@ -1,9 +1,6 @@
 package com.better.than.yours.game.cucumbers.js.not;
 
-/**
- * Created by Pszemek on 2016-05-09.
- */
-public class Cell implements Cells{
+class Cell implements Cells{
     private boolean livingStatus;
     Position position ;
     private Integer id;
@@ -23,22 +20,16 @@ public class Cell implements Cells{
     }
 
     @Override
-    public Position getPosition() {
-        return position;
-    }
-
-    @Override
     public int getLivingNeighbours() {
         return neigbours ;
     }
 
-    public void addNeigbour(){
+    void addNeigbour(){
         neigbours+=1;
     }
 
     public Integer getId(){
-        Integer id = this.id;
-        return id;
+        return this.id;
     }
 
     void revive(){

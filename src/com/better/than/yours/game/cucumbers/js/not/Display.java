@@ -56,16 +56,16 @@ public class Display extends Application {
         thread.start();
     }
 
-    public void run(String[] args){
+    void run(String[] args){
         launch(args);
     }
 
-   static public void draw(int x, int y) {
+   static void draw(int x, int y) {
         gc.setFill(Color.BLACK);
         gc.fillRect(x * 10, y * 10, 10, 10);
     }
 
-    static public void clear() {
+    static void clear() {
         gc.clearRect(0, 0,1000,1000);
     }
 }
