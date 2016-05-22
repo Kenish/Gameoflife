@@ -6,7 +6,7 @@ package com.better.than.yours.game.cucumbers.js.not;
 public interface Cells {
     boolean isAlive();
     int getLivingNeighbours();
-    int[] getPosition();
+    Position getPosition();
     Integer getId();
 
 
