@@ -6,19 +6,17 @@ import java.util.Random;
 class Engine {
    private ArrayList<Cell> toRevive = new ArrayList<>();
     private ArrayList<Cell> toKill = new ArrayList<>();
-    private Board board;
     private HashMap<Integer,Cell> mapCells= new HashMap<>();
-    Engine(Board board, int population) {
+    Engine(int population) {
         Random rnd = new Random();
         for (int i = 0; i < population; i++) {
-            Position position = new Position(rnd.nextInt(board.width), rnd.nextInt(board.height));
-            Cell cell = CellFactory.makeCell(true, position, board);
+            Position position = new Position(rnd.nextInt(Board.width), rnd.nextInt(Board.height));
+            Cell cell = CellFactory.makeCell(true, position);
             mapCells.put(cell.getId(), cell);
         }
-        this.board=board;
     }
 
-    private Integer lookForCells(Cell cell,Board board) {
+    private Integer lookForCells(Cell cell) { // looking for all Cell neighbours
         cell.zeroNeighbours();
         Integer posX = cell.position.getX();
         Integer posY = cell.position.getY();
@@ -26,8 +24,8 @@ class Engine {
         for (int j=-1; j<2;j++) {
             for (int i = -1; i < 2; i++) {
                 if (!(i==0&&j==0)){
-                    Integer checkposition = generateId(board, posX + j, posY + i);
-                    if(mapCells.containsKey(checkposition)&&mapCells.get(checkposition).isAlive()){
+                    Integer checkPosition = generateId(posX + j, posY + i);
+                    if(mapCells.containsKey(checkPosition)&&mapCells.get(checkPosition).isAlive()){
                             cell.addNeigbour();
                     }
                 }
@@ -36,16 +34,16 @@ class Engine {
         return cell.getLivingNeighbours();
     }
 
-    private void makeSomeDeadCells(Cell cell, Board board){
+    private void makeSomeDeadCells(Cell cell){ //making dead neighbours
         Integer posX = cell.position.getX();
         Integer posY = cell.position.getY();
         for (int j=-1; j<2;j++) {
             for (int i = -1; i < 2; i++) {
                 if (!(i == 0 && j == 0)) {
-                    Integer Checkposition = generateId(board, posX + j, posY + i);
-                    if (posX + j > 0 && posY + i > 0 && posX + j < board.width && posY + i < board.height && !mapCells.containsKey(Checkposition)) {
+                    Integer checkPosition = generateId(posX + j, posY + i);
+                    if (posX + j > 0 && posY + i > 0 && posX + j < Board.width && posY + i < Board.height && !mapCells.containsKey(checkPosition)) {
                         Position position = new Position(posX+j,posY+i);
-                        cellputter(CellFactory.makeCell(false, position, board));
+                        cellPutter(CellFactory.makeCell(false, position));
                     }
 
                 }
@@ -53,7 +51,7 @@ class Engine {
         }
     }
 
-    private void cellDecider(Cell cell){
+    private void cellDecider(Cell cell){ //deciding of life and death
         if (cell.getLivingNeighbours()==3 && !cell.isAlive()){
             toRevive.add(cell);
         }
@@ -62,34 +60,35 @@ class Engine {
         }
     }
 
-    private void nextTurn(){
+    private void nextTurn(){ // flushing
         toRevive.forEach(Cell::revive) ;
         toRevive.clear();
         toKill.forEach(Cell::kill);
         toKill.clear();
+        //it might need HashMap clearing
     }
-    private static Integer generateId(Board board, Integer posX, Integer posY){
-
-        return posX+(posY*board.width);
-    }
-
-    void cellputter(Cell cell){
-        mapCells.put(generateId(board,cell.position.getX(),cell.position.getY()),cell);
+    private static Integer generateId(Integer posX, Integer posY){
+    //unique id generator
+        return posX+(posY*Board.width);
     }
 
-    void playGame(){
+    void cellPutter(Cell cell){//puttin cellse
+        mapCells.put(generateId(cell.position.getX(),cell.position.getY()),cell);
+    }
 
-        for (int i=0; i<board.width*board.height;i++) {
+    void playGame(){//main play loop
+
+        for (int i=0; i<Board.width*Board.height;i++) {
             if (mapCells.containsKey(i)&&mapCells.get(i).isAlive()) {
-                makeSomeDeadCells(mapCells.get(i), board);
+                makeSomeDeadCells(mapCells.get(i));
                 Display.draw(mapCells.get(i).position.getX(),mapCells.get(i).position.getY());
                 System.out.print("a");
             }
         }
         System.out.println();
-        for (int j=0; j<board.width*board.height;j++) {
+        for (int j=0; j<Board.width*Board.height;j++) {
             if (mapCells.containsKey(j)){
-                lookForCells(mapCells.get(j),board);
+                lookForCells(mapCells.get(j));
 
             }
 

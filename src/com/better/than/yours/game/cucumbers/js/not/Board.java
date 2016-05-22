@@ -1,11 +1,11 @@
 package com.better.than.yours.game.cucumbers.js.not;
 
 class Board {
-    int width ;
-    int height;
+    static int width ; // width and height of the board
+    static int height;
     Board(int width,int height){
-        this.width=width;
-        this.height=height;
+        Board.width =width;
+        Board.height =height;
     }
 
 }
