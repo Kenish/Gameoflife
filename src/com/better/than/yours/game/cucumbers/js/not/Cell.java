@@ -1,11 +1,11 @@
 package com.better.than.yours.game.cucumbers.js.not;
 
 class Cell implements Cells{
-    private boolean livingStatus; // living status of cell
-    Position position ; // instance of position
-    private Integer id; // unique id
-    private Integer neigbours=0; // number of neighbours
-    Cell(boolean livingStatus,Position position){  //constructor making some cells
+    private boolean livingStatus; 
+    Position position ;
+    private Integer id;
+    private Integer neigbours=0; 
+    Cell(boolean livingStatus,Position position){  
         this.livingStatus=livingStatus;
         if (position.getX()<0||position.getY()<0){
             throw new WrongPositionException("X and Y coordinates should be positive");
@@ -24,7 +24,7 @@ class Cell implements Cells{
         return neigbours ;
     }
 
-    void addNeigbour(){ // adding neigbours
+    void addNeigbour(){ 
         neigbours+=1;
     }
 
