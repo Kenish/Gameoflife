@@ -10,24 +10,21 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-/**
- * Created by mati on 2016-05-14.
- *
- */
+
 
 public class Display extends Application {
     private Group root;
     private Stage primaryStage;
     private static GraphicsContext gc;
     public void start(Stage primaryStage) throws Exception {
-        //jakies gowno;
+
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("The Game of Life");
         root = new Group();
         Scene scene = new Scene(root, 800, 600);
         GridPane grid = new GridPane();
         scene.setRoot(grid);
-        //button on-click: initializeGame();
+
         Button startGameButton = new Button("Start Game");
         startGameButton.setOnAction(event -> {
             try {
@@ -43,7 +40,7 @@ public class Display extends Application {
     }
 
     private void initializeGame() throws InterruptedException {
-        //canvas
+ 
         System.out.println("Game started");
         Canvas canvas = new Canvas(1000, 1000);
         gc = canvas.getGraphicsContext2D();
