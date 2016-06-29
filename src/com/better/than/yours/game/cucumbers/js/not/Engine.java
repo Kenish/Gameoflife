@@ -16,7 +16,7 @@ class Engine {
         }
     }
 
-    private Integer lookForCells(Cell cell) { // looking for all Cell neighbours
+    private Integer lookForCells(Cell cell) {
         cell.zeroNeighbours();
         Integer posX = cell.position.getX();
         Integer posY = cell.position.getY();
@@ -34,7 +34,7 @@ class Engine {
         return cell.getLivingNeighbours();
     }
 
-    private void makeSomeDeadCells(Cell cell){ //making dead neighbours
+    private void makeSomeDeadCells(Cell cell){
         Integer posX = cell.position.getX();
         Integer posY = cell.position.getY();
         for (int j=-1; j<2;j++) {
@@ -51,7 +51,7 @@ class Engine {
         }
     }
 
-    private void cellDecider(Cell cell){ //deciding of life and death
+    private void cellDecider(Cell cell){ 
         if (cell.getLivingNeighbours()==3 && !cell.isAlive()){
             toRevive.add(cell);
         }
@@ -65,18 +65,18 @@ class Engine {
         toRevive.clear();
         toKill.forEach(Cell::kill);
         toKill.clear();
-        //it might need HashMap clearing
+       
     }
     private static Integer generateId(Integer posX, Integer posY){
-    //unique id generator
+    
         return posX+(posY*Board.width);
     }
 
-    void cellPutter(Cell cell){//puttin cellse
+    void cellPutter(Cell cell){
         mapCells.put(generateId(cell.position.getX(),cell.position.getY()),cell);
     }
 
-    void playGame(){//main play loop
+    void playGame(){
 
         for (int i=0; i<Board.width*Board.height;i++) {
             if (mapCells.containsKey(i)&&mapCells.get(i).isAlive()) {
